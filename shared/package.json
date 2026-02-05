@@ -1,0 +1,14 @@
+{
+  "name": "@web/shared",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    "./tenants": {
+      "types": "./tenants/index.ts",
+      "default": "./tenants/index.ts"
+    }
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

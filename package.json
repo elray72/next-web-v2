@@ -1,0 +1,19 @@
+{
+  "name": "next-web",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "site"
+  ],
+  "scripts": {
+    "dev": "pnpm --filter @web/site dev",
+    "build": "pnpm --filter @web/site build",
+    "cms:build": "dotnet build cms",
+    "cms:run": "dotnet run --project cms"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  },
+  "packageManager": "pnpm@9.15.0"
+}
