@@ -1,4 +1,4 @@
-namespace Web.Configuration;
+namespace DW.Cms.Configuration;
 
 public static class TenantConfiguration
 {

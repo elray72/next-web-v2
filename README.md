@@ -88,22 +88,112 @@ pnpm install
 docker-compose up -d
 ```
 
-### 2. Build & Run CMS (Umbraco)
+Wait 10-15 seconds for SQL Server to initialize.
+
+### 2. Create Database
+
+**Option A: Automated Script** (Recommended)
 
 ```bash
-dotnet build cms
-dotnet run --project cms
+./scripts/create-database.sh
 ```
 
-Navigate to `https://localhost:5001` to complete Umbraco setup.
+**Option B: Manual Creation**
 
-### 3. Run Site (Next.js)
+```bash
+docker exec umbraco-sqlserver /opt/mssql-tools18/bin/sqlcmd \
+  -S localhost -U sa -P 'Jump2^Music$' -C \
+  -Q "CREATE DATABASE UmbracoDb;"
+```
+
+**Note:** The database must exist before running Umbraco for the first time. The installation wizard will create the schema automatically.
+
+### 3. Build & Run CMS (Umbraco)
+
+#### Using CLI
+
+```bash
+# Build and run
+dotnet build cms/DW.Cms.csproj
+dotnet run --project cms/DW.Cms.csproj
+```
+
+**If build fails with "Assets file not found":**
+```bash
+dotnet restore cms/DW.Cms.csproj
+dotnet build cms/DW.Cms.csproj
+```
+
+#### Using JetBrains Rider
+
+1. Open the `cms/` folder or `cms/DW.Cms.csproj` in Rider
+2. Build: `⌘F9` or **Build → Build Solution**
+3. Run: `⌃R` or **Run → Run 'DW.Cms'**
+
+**If build fails:** Right-click project → **Restore NuGet Packages**, then rebuild
+
+#### Using Visual Studio (Windows)
+
+1. Open `cms/DW.Cms.csproj` in Visual Studio
+2. Build: `Ctrl+Shift+B` or **Build → Build Solution**
+3. Run: `F5` or **Debug → Start Debugging**
+
+Navigate to `https://localhost:44386` or `http://localhost:38608` to complete Umbraco installation wizard.
+
+**First-time Setup:**
+1. Create your admin account
+2. Umbraco will automatically create database tables
+3. No further configuration needed
+
+### 4. Run Site (Next.js)
 
 ```bash
 pnpm dev
 ```
 
 Navigate to `http://localhost:3000`.
+
+## Content Delivery API Integration
+
+The Next.js frontend uses Umbraco's Content Delivery API for headless CMS functionality.
+
+### Setup
+
+1. **Enable Content Delivery API** in Umbraco (enabled by default in v13+)
+
+2. **Configure environment variables** in `site/.env.local`:
+
+```bash
+UMBRACO_API_URL=https://localhost:5001
+UMBRACO_API_KEY=  # Optional: Add API key if required
+```
+
+3. **Fetch content in Next.js**:
+
+```typescript
+import { getContentByPath } from '@/lib/umbraco';
+
+export default async function Page() {
+  const content = await getContentByPath('/marketing/about', {
+    revalidate: 60, // ISR: revalidate every 60 seconds
+  });
+
+  return <h1>{content.properties.title}</h1>;
+}
+```
+
+### API Client Methods
+
+- `getContentByPath(path)` - Fetch content by route path
+- `getContentById(id)` - Fetch content by ID
+- `getContent(params)` - Get all content with pagination/filtering
+- `searchContent(query)` - Search content by name
+
+See [site/src/lib/umbraco/client.ts](site/src/lib/umbraco/client.ts) for full API.
+
+### Example
+
+Visit [site/src/app/marketing/about/page.tsx](site/src/app/marketing/about/page.tsx) for a complete example.
 
 ## Configuration
 
@@ -169,13 +259,13 @@ pnpm build
 
 ```bash
 # Build
-dotnet build cms
+dotnet build cms/DW.Cms.csproj
 
 # Run
-dotnet run --project cms
+dotnet run --project cms/DW.Cms.csproj
 
 # Run with hot reload
-dotnet watch --project cms
+dotnet watch --project cms/DW.Cms.csproj
 ```
 
 ### Site (Next.js)
@@ -189,6 +279,15 @@ pnpm --filter @web/site build
 
 # Lint
 pnpm --filter @web/site lint
+
+# Lint and auto-fix
+pnpm --filter @web/site lint:fix
+
+# Format code with Prettier
+pnpm --filter @web/site format
+
+# Check formatting
+pnpm --filter @web/site format:check
 ```
 
 ### Docker

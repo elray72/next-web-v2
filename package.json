@@ -9,8 +9,8 @@
   "scripts": {
     "dev": "pnpm --filter @web/site dev",
     "build": "pnpm --filter @web/site build",
-    "cms:build": "dotnet build cms",
-    "cms:run": "dotnet run --project cms"
+    "cms:build": "dotnet build cms/DW.Cms.csproj",
+    "cms:run": "dotnet run --project cms/DW.Cms.csproj"
   },
   "devDependencies": {
     "typescript": "^5.7.0"

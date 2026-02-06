@@ -1,5 +1,5 @@
-using Web.Middleware;
-using Web.Services;
+using DW.Cms.Middleware;
+using DW.Cms.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 

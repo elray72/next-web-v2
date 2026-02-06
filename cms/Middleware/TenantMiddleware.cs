@@ -1,7 +1,7 @@
-using Web.Configuration;
-using Web.Services;
+using DW.Cms.Configuration;
+using DW.Cms.Services;
 
-namespace Web.Middleware;
+namespace DW.Cms.Middleware;
 
 public class TenantMiddleware
 {

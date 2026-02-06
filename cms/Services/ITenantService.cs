@@ -1,4 +1,4 @@
-namespace Web.Services;
+namespace DW.Cms.Services;
 
 public interface ITenantService
 {
