@@ -10,6 +10,7 @@ builder.CreateUmbracoBuilder()
     .AddBackOffice()
     .AddWebsite()
     .AddComposers()
+    .AddUSync()
     .Build();
 
 WebApplication app = builder.Build();

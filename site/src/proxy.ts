@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { TENANT_ZONES, TENANT_DEFAULT_ZONE, isValidTenant, isValidZoneForTenant } from '@web/shared/tenants';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const host = request.headers.get('host')?.split(':')[0] ?? '';
   const pathname = request.nextUrl.pathname;
   const segments = pathname.split('/').filter(Boolean);

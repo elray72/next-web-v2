@@ -43,4 +43,12 @@ secrets.json
 
 # Windows
 Thumbs.db
+
+# Node.js
 node_modules
+
+# Next.js
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
