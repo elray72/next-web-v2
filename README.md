@@ -15,50 +15,68 @@ A multi-tenant, multi-zone platform with Umbraco CMS backend and Next.js fronten
 ## Project Structure
 
 ```
-web/
-├── cms/                      # Umbraco CMS (.NET)
-│   ├── Web.csproj
+next-web/
+├── cms/                      # Umbraco CMS (.NET 10)
+│   ├── DW.Cms.csproj
 │   ├── Program.cs
 │   ├── Configuration/
 │   ├── Middleware/
 │   └── Services/
 ├── site/                     # Next.js frontend
+│   ├── proxy.ts              # Zone-based routing (Next.js 16)
+│   ├── next.config.ts
 │   ├── package.json
 │   └── src/
 │       ├── app/
 │       │   ├── marketing/
 │       │   ├── member/
 │       │   └── onboarding/
-│       └── middleware.ts
-├── shared/                   # Shared code
+│       └── tenants/
+│           └── tenant-config.ts
+├── shared/                   # @web/shared — shared config, types, SCSS themes
 │   ├── package.json
 │   └── tenants/
 │       ├── index.ts
-│       └── types.ts
+│       ├── types.ts
+│       ├── mcd/
+│       │   ├── config.ts
+│       │   └── theme.scss
+│       ├── twd/
+│       │   ├── config.ts
+│       │   └── theme.scss
+│       ├── dw/
+│       │   ├── config.ts
+│       │   └── theme.scss
+│       └── default/
+│           ├── config.ts
+│           └── theme.scss
 ├── docker-compose.yml
-├── package.json              # Workspace root
+├── package.json              # Workspace root with tenant dev scripts
 └── pnpm-workspace.yaml
 ```
 
 ## Multi-Tenant Architecture
 
-### Tenants (Domain-Based)
+Tenancy is **build-time**: the `TENANT` environment variable selects which tenant is active when the dev server or build starts. Each tenant gets a separate build cache (`distDir`).
 
-| Tenant | Host | Allowed Zones |
-|--------|------|---------------|
-| `mcd` | `diet.mayoclinic.org` | marketing, member, onboarding |
-| `twd` | `www.totalwellbeingdiet.com` | marketing, member, onboarding |
-| `dw` | `www.digitalwellness.com` | marketing |
+### Tenants
+
+| Tenant | Name | Host | Port (dev) |
+|--------|------|------|------------|
+| `mcd` | Mayo Clinic Diet | `diet.mayoclinic.org` | 3000 |
+| `twd` | Total Wellbeing Diet | `www.totalwellbeingdiet.com` | 3001 |
+| `dw` | Digital Wellness | `www.digitalwellness.com` | 3002 |
+| `default` | Local / fallback | `localhost` | 3000 |
 
 ### Zones (Path-Based)
 
 | Zone | Purpose |
-|------|---------|
+|------|--------|
 | `marketing` | Public-facing marketing content |
 | `member` | Member-exclusive content |
 | `onboarding` | Tenant onboarding flows |
 
-Tenant configuration is shared between CMS and Site via `@web/shared/tenants`.
+`site/proxy.ts` reads `tenantConfig.zones` and `tenantConfig.defaultZone` to redirect `/` and route zone paths. See [docs/multi-tenant.md](docs/multi-tenant.md) for detailed documentation.
 
 ## Prerequisites
 
@@ -148,10 +166,14 @@ Navigate to `https://localhost:44386` or `http://localhost:38608` to complete Um
 ### 4. Run Site (Next.js)
 
 ```bash
-pnpm dev
+# From the monorepo root:
+pnpm mcd        # Mayo Clinic Diet  → http://localhost:3000
+pnpm twd        # Total Wellbeing   → http://localhost:3001
+pnpm dw         # Digital Wellness  → http://localhost:3002
+pnpm dev        # Default tenant    → http://localhost:3000
 ```
 
-Navigate to `http://localhost:3000`.
+All three tenant dev servers can run simultaneously — each uses a separate build cache.
 
 ## Content Delivery API Integration
 
@@ -230,15 +252,21 @@ services:
 
 ### Tenant Configuration
 
-Shared tenant config in `shared/tenants/index.ts`:
+Each tenant has a `config.ts` in `shared/tenants/<name>/config.ts` and a `theme.scss` for CSS custom properties. The active tenant is selected at build time via `TENANT` and loaded in `site/src/tenants/tenant-config.ts`:
 
 ```typescript
-export const TENANTS = [
-  { name: 'mcd', host: 'diet.mayoclinic.org', zones: ['marketing', 'member', 'onboarding'], defaultZone: 'marketing' },
-  { name: 'twd', host: 'www.totalwellbeingdiet.com', zones: ['marketing', 'member', 'onboarding'], defaultZone: 'marketing' },
-  { name: 'dw', host: 'www.digitalwellness.com', zones: ['marketing'], defaultZone: 'marketing' },
-];
+// shared/tenants/mcd/config.ts
+export const config: TenantConfig = {
+  name: 'mcd',
+  host: 'diet.mayoclinic.org',
+  zones: ['marketing', 'member', 'onboarding'],
+  defaultZone: 'marketing',
+  branding: { title: 'Mayo Clinic Diet' },
+  features: { memberPortal: true, onboarding: true, blog: true },
+};
 ```
+
+See [docs/multi-tenant.md](docs/multi-tenant.md) for the full system and how to add a new tenant.
 
 ## Development Tools
 
@@ -268,8 +296,11 @@ Imports are automatically sorted and organized when running `format` commands:
 # Install all dependencies
 pnpm install
 
-# Run Next.js dev server
-pnpm dev
+# Run Next.js dev server per tenant
+pnpm mcd        # TENANT=mcd  → port 3000
+pnpm twd        # TENANT=twd  → port 3001
+pnpm dw         # TENANT=dw   → port 3002
+pnpm dev        # Default tenant → port 3000
 
 # Build Next.js
 pnpm build

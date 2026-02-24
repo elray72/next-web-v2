@@ -54,8 +54,20 @@ next-web/
 ├── shared/                     # @web/shared workspace
 │   ├── package.json
 │   └── tenants/                # Multi-tenant definitions
-│       ├── types.ts            # TenantConfig, TenantTheme, etc.
-│       └── index.ts            # TENANTS array, getTenantFromHeaders()
+│       ├── types.ts            # TenantConfig, TenantName, Zone, etc.
+│       ├── index.ts            # getCurrentTenant(), re-exports all configs
+│       ├── mcd/
+│       │   ├── config.ts       # Mayo Clinic Diet config
+│       │   └── theme.scss      # MCD CSS custom properties
+│       ├── twd/
+│       │   ├── config.ts
+│       │   └── theme.scss
+│       ├── dw/
+│       │   ├── config.ts
+│       │   └── theme.scss
+│       └── default/
+│           ├── config.ts
+│           └── theme.scss
 │
 ├── site/                       # @web/site workspace (Next.js app)
 │   ├── package.json            # mcd, twd, dw dev scripts
@@ -63,11 +75,12 @@ next-web/
 │   ├── tsconfig.json
 │   ├── components.json         # Component library config
 │   │
+│   ├── proxy.ts                # Zone-based routing (Next.js 16 proxy)
 │   └── src/
 │       ├── app/                # Next.js App Router (Primary Adapter)
-│       │   ├── layout.tsx      # Root layout with tenant detection
+│       │   ├── layout.tsx      # Root layout
 │       │   ├── page.tsx        # Home page
-│       │   ├── globals.scss    # Global styles + tenant themes
+│       │   ├── globals.scss    # Global styles (tenant theme prepended by Sass)
 │       │   ├── marketing/      # Public marketing zone
 │       │   │   ├── page.tsx
 │       │   │   └── about/
@@ -99,44 +112,48 @@ next-web/
 │       │   ├── dependencies.ts # Service locator (getCmsProvider)
 │       │   ├── constants/      # App constants
 │       │   └── helpers/        # Utility functions
-│       │
-│       └── proxy.ts            # Middleware proxy (not yet wired up)
+│       └── tenants/
+│           └── tenant-config.ts # Build-time resolved tenant config
 │
 ├── scripts/
 │   └── create-database.sh      # Database initialization script
 │
 └── docs/
     ├── architecture.md         # This file
+    ├── multi-tenant.md         # Multi-tenant system documentation
     ├── color-system.md         # Color token documentation
-    └── shadcn.md               # (Legacy - removed shadcn/tailwind)
+    └── troubleshooting.md      # Common issues and fixes
 ```
 
 ## Key Architectural Patterns
 
 ### 1. Multi-Tenant System
 
-**Tenant Detection**:
-- Production: Domain-based routing (mcd.example.com, twd.example.com, dw.example.com)
-- Development: Environment variable override (`NEXT_PUBLIC_DEV_TENANT=mcd`)
+**Tenant Selection** — build-time, not runtime:
+- Set the `TENANT` environment variable when starting the dev server or running a build.
+- `next.config.ts` validates the value, injects it as `NEXT_PUBLIC_TENANT`, and selects a per-tenant `distDir`.
+- There is no runtime domain sniffing; each tenant is a separate build artifact.
 
 **Tenant Configuration** (`shared/tenants/`):
 ```typescript
 interface TenantConfig {
-  name: TenantName;              // 'mcd' | 'twd' | 'dw'
-  hosts: TenantHost[];           // Production domains
-  theme?: TenantTheme;           // Colors, radius
-  typography?: TenantTypography; // Fonts, sizes
-  branding?: TenantBranding;     // Logo, favicon, titles
-  api?: TenantApiConfig;         // CMS URL, API keys, analytics
-  features?: TenantFeatures;     // Feature flags per tenant
+  name: TenantName;              // 'mcd' | 'twd' | 'dw' | 'default'
+  host: TenantHost;              // Production hostname
+  zones: Zone[];                 // Zones this tenant exposes
+  defaultZone: Zone;             // Zone that '/' redirects to
+  branding?: TenantBranding;     // Logo, favicon, title, description
+  typography?: TenantTypography; // Fonts, base size
+  api?: TenantApiConfig;         // CMS URL, API key, analytics ID
+  features?: TenantFeatures;     // Feature flags (memberPortal, blog, etc.)
 }
 ```
 
-**Tenant Theming**:
-- CSS variables in `globals.scss` with `html[data-tenant='mcd']` selectors
-- Comprehensive color system (primary, secondary, tertiary, accent, semantic, surfaces, borders, forms)
-- Hex colors (not OKLCH) for broad browser compatibility
-- Dark mode support via `.dark` class
+**Tenant Theming** — Sass compiler injection:
+- Each tenant has `shared/tenants/<name>/theme.scss` with `:root` CSS custom property overrides.
+- `next.config.ts` uses `sassOptions.loadPaths` (monorepo root) and `additionalData` to prepend `@use 'shared/tenants/${tenant}/theme'` to every compiled SCSS file.
+- No explicit import of the theme is needed in application code — switching `TENANT` is sufficient.
+
+See [multi-tenant.md](multi-tenant.md) for the full system documentation.
 
 ### 2. Service Locator Pattern
 
@@ -215,7 +232,10 @@ export function Button({ variant = 'primary', size = 'md', ... }) {
 - `/member` - Member portal (requires authentication)
 - `/onboarding` - Onboarding flow (specific tenants)
 
-**Future**: Middleware-based zone routing and authentication checks
+**Zone Routing** (`site/proxy.ts`):
+- Next.js 16 proxy file (replaces the deprecated `middleware.ts` convention).
+- Reads `tenantConfig.zones` and `tenantConfig.defaultZone` at build time.
+- Redirects `/` to the default zone; tags valid zone requests with `x-zone` header; rewrites unrecognised paths under the default zone.
 
 ## Hooks Placement Guide
 
@@ -315,10 +335,10 @@ Future additions should follow the hooks placement guidelines above.
 ```bash
 # Root directory commands
 pnpm install                # Install all dependencies
-pnpm dev                    # Run site with default tenant
-pnpm mcd                    # Run site as Mayo Clinic tenant
-pnpm twd                    # Run site as The Wellness District tenant
-pnpm dw                     # Run site as Digital Wellness tenant
+pnpm dev                    # Run site with default tenant (port 3000)
+pnpm mcd                    # Run site as Mayo Clinic Diet (port 3000)
+pnpm twd                    # Run site as Total Wellbeing Diet (port 3001)
+pnpm dw                     # Run site as Digital Wellness (port 3002)
 
 # Site-specific commands (from site/ directory)
 pnpm build                  # Production build
@@ -361,23 +381,24 @@ export function Input({ className, ...props }) {
 
 ### Tenant Theming
 
-To add or modify tenant colors, edit `src/app/globals.scss`:
+To add or modify tenant colors, edit the tenant's `theme.scss` in `shared/tenants/<name>/theme.scss`:
 
 ```scss
-html[data-tenant='new-tenant'] {
-  --primary: #abcdef;
-  --primary-foreground: #ffffff;
-  --background: #fafafa;
-  // ... other color tokens
+// shared/tenants/newco/theme.scss
+:root {
+  --color-primary: oklch(55% 0.18 250);
+  --color-primary-foreground: oklch(98% 0 0);
+  --radius: 0.5rem;
 }
 ```
 
-See [color-system.md](color-system.md) for complete color token documentation.
+The Sass compiler prepends `@use 'shared/tenants/${tenant}/theme'` to every SCSS file via `sassOptions.additionalData` in `next.config.ts`. No explicit import is needed in application code.
+
+See [color-system.md](color-system.md) for complete color token documentation and [multi-tenant.md](multi-tenant.md) for how to add a new tenant.
 
 ## Future Enhancements
 
 ### Planned Features
-- [ ] Middleware-based routing and authentication
 - [ ] Application layer hooks for use case orchestration
 - [ ] Authentication provider (Auth0, Clerk, or custom)
 - [ ] More Base UI components (Input, Select, Dialog, Popover, etc.)
@@ -387,7 +408,6 @@ See [color-system.md](color-system.md) for complete color token documentation.
 - [ ] Dark mode toggle component
 
 ### Technical Debt
-- Wire up `proxy.ts` as Next.js middleware
 - Add comprehensive error boundaries
 - Implement loading states for Server Components
 - Add unit tests (Vitest)

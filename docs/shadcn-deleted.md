@@ -1,5 +1,8 @@
 # shadcn/ui Setup Guide
 
+## Warning
+We are no longer using shadcn/ui for our component library. This file is retained for reference in case we want to revisit this decision in the future.
+
 ## Prerequisites
 
 Before installing shadcn/ui, you need to have Tailwind CSS properly configured. This project uses **Tailwind CSS v4**, which has a different setup than v3.
