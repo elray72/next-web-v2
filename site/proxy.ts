@@ -1,5 +1,5 @@
 /**
- * Next.js Middleware for zone-based routing
+ * Next.js Proxy for zone-based routing
  * Handles routing between marketing, member, and onboarding zones
  * based on the build-time selected tenant configuration
  */
@@ -8,7 +8,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { tenantConfig } from './src/tenants/tenant-config';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
     const segments = pathname.split('/').filter(Boolean);
     const firstSegment = segments[0] ?? '';
