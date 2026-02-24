@@ -69,8 +69,8 @@ web/
 
 **Zones (Path-Based):**
 - `marketing` - Public-facing content
-- `member` - Member-exclusive content
-- `onboarding` - Tenant onboarding flows
+- `member` - Member exclusive content
+- `onboarding` - Member onboarding flows
 
 ### Shared Configuration
 Tenant config lives in `@web/shared/tenants` with both short names and host domains:
