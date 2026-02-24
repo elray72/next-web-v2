@@ -1,6 +1,31 @@
-import type { TenantHost, Zone, TenantConfig } from './types';
+import type { TenantConfig, TenantHost, TenantName, Zone } from './types';
 
 export * from './types';
+
+export const TENANTS: TenantConfig[] = [
+  {
+    name: 'mcd',
+    host: 'diet.mayoclinic.org',
+    zones: ['marketing', 'member', 'onboarding'],
+    defaultZone: 'marketing',
+  },
+  {
+    name: 'twd',
+    host: 'www.totalwellbeingdiet.com',
+    zones: ['marketing', 'member', 'onboarding'],
+    defaultZone: 'marketing',
+  },
+  {
+    name: 'dw',
+    host: 'www.digitalwellness.com',
+    zones: ['marketing'],
+    defaultZone: 'marketing',
+  },
+];
+
+// Map host to tenant config
+const HOST_TO_TENANT = new Map(TENANTS.map((t) => [t.host, t]));
+const NAME_TO_TENANT = new Map(TENANTS.map((t) => [t.name, t]));
 
 export const TENANT_ZONES: Record<TenantHost, Zone[]> = {
   'diet.mayoclinic.org': ['marketing', 'member', 'onboarding'],
@@ -14,17 +39,26 @@ export const TENANT_DEFAULT_ZONE: Record<TenantHost, Zone> = {
   'www.digitalwellness.com': 'marketing',
 };
 
-export const TENANTS: TenantConfig[] = [
-  { host: 'diet.mayoclinic.org', zones: ['marketing', 'member', 'onboarding'], defaultZone: 'marketing' },
-  { host: 'www.totalwellbeingdiet.com', zones: ['marketing', 'member', 'onboarding'], defaultZone: 'marketing' },
-  { host: 'www.digitalwellness.com', zones: ['marketing'], defaultZone: 'marketing' },
-];
-
 export function isValidTenant(host: string): host is TenantHost {
   return host in TENANT_ZONES;
 }
 
-export function isValidZoneForTenant(host: TenantHost, zone: string): zone is Zone {
+export function isValidTenantName(name: string): name is TenantName {
+  return NAME_TO_TENANT.has(name as TenantName);
+}
+
+export function getTenantByHost(host: TenantHost): TenantConfig | undefined {
+  return HOST_TO_TENANT.get(host);
+}
+
+export function getTenantByName(name: TenantName): TenantConfig | undefined {
+  return NAME_TO_TENANT.get(name);
+}
+
+export function isValidZoneForTenant(
+  host: TenantHost,
+  zone: string
+): zone is Zone {
   return TENANT_ZONES[host]?.includes(zone as Zone) ?? false;
 }
 

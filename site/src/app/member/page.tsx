@@ -1,5 +1,5 @@
-import { headers } from 'next/headers';
 import { getTenantFromHeaders, getZoneFromHeaders } from '@web/shared/tenants';
+import { headers } from 'next/headers';
 
 export default async function MemberPage() {
   const h = await headers();

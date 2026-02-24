@@ -1,5 +1,6 @@
-import { headers } from 'next/headers';
+import { Button } from '@/components/ui/button';
 import { getTenantFromHeaders, getZoneFromHeaders } from '@web/shared/tenants';
+import { headers } from 'next/headers';
 
 export default async function MarketingPage() {
   const h = await headers();
@@ -11,6 +12,7 @@ export default async function MarketingPage() {
       <h1>Marketing Zone</h1>
       <p>Tenant: {tenant}</p>
       <p>Zone: {zone}</p>
+      <Button>Click me</Button>
     </main>
   );
 }

@@ -1,5 +1,5 @@
-import { getContentByPath } from '@/lib/umbraco';
-import type { UmbracoContent } from '@/lib/umbraco';
+import { getCmsProvider } from '@/lib/dependencies';
+import type { ContentItem } from '@/lib/cms/types';
 
 // Example properties for an "About" page content type
 interface AboutPageProperties {
@@ -9,14 +9,18 @@ interface AboutPageProperties {
 }
 
 export default async function AboutPage() {
+  const cms = getCmsProvider();
+
   try {
-    // Fetch content from Umbraco Content Delivery API
-    const content = await getContentByPath<
-      UmbracoContent<AboutPageProperties>
-    >('/marketing/about', {
-      // Revalidate every 60 seconds (ISR)
-      revalidate: 60,
-    });
+    // Fetch content from CMS via service locator
+    const content = await cms.getContentByPath<ContentItem<AboutPageProperties>>(
+      '/marketing/about',
+      undefined,
+      {
+        // Revalidate every 60 seconds (ISR)
+        revalidate: 60,
+      }
+    );
 
     return (
       <main className="container">

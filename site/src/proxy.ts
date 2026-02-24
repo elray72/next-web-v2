@@ -1,6 +1,10 @@
-import { NextResponse } from 'next/server';
+import {
+  TENANT_DEFAULT_ZONE,
+  isValidTenant,
+  isValidZoneForTenant,
+} from '@web/shared/tenants';
 import type { NextRequest } from 'next/server';
-import { TENANT_ZONES, TENANT_DEFAULT_ZONE, isValidTenant, isValidZoneForTenant } from '@web/shared/tenants';
+import { NextResponse } from 'next/server';
 
 export function proxy(request: NextRequest) {
   const host = request.headers.get('host')?.split(':')[0] ?? '';

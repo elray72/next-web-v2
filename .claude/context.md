@@ -61,11 +61,11 @@ web/
 ### Multi-Tenancy Architecture
 
 **Tenants (Domain-Based):**
-| Host | Zones |
-|------|-------|
-| diet.mayoclinic.org | marketing, member, onboarding |
-| www.totalwellbeingdiet.com | marketing, member, onboarding |
-| www.digitalwellness.com | marketing |
+| Name | Host | Zones |
+|------|------|-------|
+| mcd | diet.mayoclinic.org | marketing, member, onboarding |
+| twd | www.totalwellbeingdiet.com | marketing, member, onboarding |
+| dw | www.digitalwellness.com | marketing |
 
 **Zones (Path-Based):**
 - `marketing` - Public-facing content
@@ -73,9 +73,17 @@ web/
 - `onboarding` - Tenant onboarding flows
 
 ### Shared Configuration
-Tenant config lives in `@web/shared/tenants` and is imported by both:
+Tenant config lives in `@web/shared/tenants` with both short names and host domains:
+```typescript
+export const TENANTS = [
+  { name: 'mcd', host: 'diet.mayoclinic.org', zones: [...], defaultZone: 'marketing' },
+  { name: 'twd', host: 'www.totalwellbeingdiet.com', zones: [...], defaultZone: 'marketing' },
+  { name: 'dw', host: 'www.digitalwellness.com', zones: [...], defaultZone: 'marketing' },
+];
+```
+
 - **CMS**: `cms/Configuration/TenantConfiguration.cs` (C# version)
-- **Site**: `import { TENANT_ZONES } from '@web/shared/tenants'`
+- **Site**: `import { TENANTS, getTenantByHost } from '@web/shared/tenants'`
 
 ---
 
@@ -108,7 +116,23 @@ dotnet run --project cms
 
 # Site
 pnpm dev
+pnpm --filter @web/site lint
+pnpm --filter @web/site format  # Auto-organizes imports
+
+# Shared
+pnpm --filter @web/shared lint:fix
+pnpm --filter @web/shared format
 ```
+
+## Development Tools
+
+### Linting & Formatting
+- **ESLint**: TypeScript linting in both `site` and `shared`
+- **Prettier**: Code formatting with 80-char limit
+- **Import Organization**: Automatic via `prettier-plugin-organize-imports`
+  - Removes unused imports
+  - Sorts alphabetically
+  - Groups: built-ins → external → internal
 
 ---
 
@@ -128,7 +152,11 @@ pnpm dev
 |------|---------|
 | `cms/` | Umbraco CMS (renamed from src) |
 | `site/` | Next.js frontend |
+| `site/eslint.config.mjs` | ESLint configuration for Next.js |
+| `site/.prettierrc.json` | Prettier config with import organization |
 | `shared/tenants/` | Shared tenant configuration |
+| `shared/eslint.config.mjs` | ESLint configuration for shared code |
+| `shared/.prettierrc.json` | Prettier config with import organization |
 | `package.json` | pnpm workspace root |
 | `pnpm-workspace.yaml` | Workspace config |
 | `docker-compose.yml` | SQL Server container |
@@ -145,4 +173,4 @@ pnpm dev
 
 ---
 
-*Context saved: 2026-02-03*
+*Last updated: 2026-02-24*

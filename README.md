@@ -44,11 +44,11 @@ web/
 
 ### Tenants (Domain-Based)
 
-| Tenant Host | Allowed Zones |
-|-------------|---------------|
-| `diet.mayoclinic.org` | marketing, member, onboarding |
-| `www.totalwellbeingdiet.com` | marketing, member, onboarding |
-| `www.digitalwellness.com` | marketing |
+| Tenant | Host | Allowed Zones |
+|--------|------|---------------|
+| `mcd` | `diet.mayoclinic.org` | marketing, member, onboarding |
+| `twd` | `www.totalwellbeingdiet.com` | marketing, member, onboarding |
+| `dw` | `www.digitalwellness.com` | marketing |
 
 ### Zones (Path-Based)
 
@@ -171,7 +171,7 @@ UMBRACO_API_KEY=  # Optional: Add API key if required
 3. **Fetch content in Next.js**:
 
 ```typescript
-import { getContentByPath } from '@/lib/umbraco';
+import { getContentByPath } from '@/providers/umbraco';
 
 export default async function Page() {
   const content = await getContentByPath('/marketing/about', {
@@ -189,7 +189,7 @@ export default async function Page() {
 - `getContent(params)` - Get all content with pagination/filtering
 - `searchContent(query)` - Search content by name
 
-See [site/src/lib/umbraco/client.ts](site/src/lib/umbraco/client.ts) for full API.
+See [site/src/providers/umbraco/index.ts](site/src/providers/umbraco/index.ts) for full API.
 
 ### Example
 
@@ -233,12 +233,32 @@ services:
 Shared tenant config in `shared/tenants/index.ts`:
 
 ```typescript
-export const TENANT_ZONES = {
-  'diet.mayoclinic.org': ['marketing', 'member', 'onboarding'],
-  'www.totalwellbeingdiet.com': ['marketing', 'member', 'onboarding'],
-  'www.digitalwellness.com': ['marketing'],
-};
+export const TENANTS = [
+  { name: 'mcd', host: 'diet.mayoclinic.org', zones: ['marketing', 'member', 'onboarding'], defaultZone: 'marketing' },
+  { name: 'twd', host: 'www.totalwellbeingdiet.com', zones: ['marketing', 'member', 'onboarding'], defaultZone: 'marketing' },
+  { name: 'dw', host: 'www.digitalwellness.com', zones: ['marketing'], defaultZone: 'marketing' },
+];
 ```
+
+## Development Tools
+
+### Code Quality
+
+**Linting:**
+- ESLint for both `site` and `shared` workspaces
+- TypeScript type checking
+- Next.js-specific rules for `site`
+
+**Formatting:**
+- Prettier with 80-character line limit
+- Automatic import organization via `prettier-plugin-organize-imports`
+- Consistent code style across all workspaces
+
+**Import Organization:**
+Imports are automatically sorted and organized when running `format` commands:
+- Removes unused imports
+- Sorts imports alphabetically
+- Groups: built-ins → external packages → internal modules
 
 ## Commands
 
@@ -283,11 +303,27 @@ pnpm --filter @web/site lint
 # Lint and auto-fix
 pnpm --filter @web/site lint:fix
 
-# Format code with Prettier
+# Format code with Prettier (includes import organization)
 pnpm --filter @web/site format
 
 # Check formatting
 pnpm --filter @web/site format:check
+```
+
+### Shared Package
+
+```bash
+# Lint TypeScript
+pnpm --filter @web/shared lint
+
+# Lint and auto-fix
+pnpm --filter @web/shared lint:fix
+
+# Format code (includes import organization)
+pnpm --filter @web/shared format
+
+# Check formatting
+pnpm --filter @web/shared format:check
 ```
 
 ### Docker
