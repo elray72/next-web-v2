@@ -49,6 +49,7 @@ node_modules
 
 # Next.js
 .next/
+.next-*/
 out/
 *.tsbuildinfo
 next-env.d.ts

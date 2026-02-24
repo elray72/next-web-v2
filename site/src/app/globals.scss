@@ -1,8 +1,286 @@
-/**
- * Default Global Styles (No Tenant Selected)
- * For development without tenant-specific script
- */
+/* Import sanitize.css for CSS reset */
+@import 'sanitize.css';
+@import 'sanitize.css/forms.css';
+@import 'sanitize.css/typography.css';
+@import 'sanitize.css/assets.css';
 
-@import '../styles/base.scss';
-@import '../styles/dark.scss';
-@import '../styles/common.scss';
+/* Base theme variables (default greyscale) */
+:root {
+    // Spacing & Layout
+    --radius: 0.625rem;
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --radius-2xl: calc(var(--radius) + 8px);
+
+    // Brand Colors - Greyscale (White Label)
+    --primary: #6b7280;
+    --primary-foreground: #ffffff;
+    --primary-hover: #4b5563;
+    --primary-active: #374151;
+
+    --secondary: #9ca3af;
+    --secondary-foreground: #ffffff;
+    --secondary-hover: #6b7280;
+    --secondary-active: #4b5563;
+
+    --tertiary: #d1d5db;
+    --tertiary-foreground: #1f2937;
+    --tertiary-hover: #9ca3af;
+    --tertiary-active: #6b7280;
+
+    --accent: #6b7280;
+    --accent-foreground: #ffffff;
+    --accent-hover: #4b5563;
+    --accent-active: #374151;
+
+    // Semantic Colors
+    --positive: #10b981;
+    --positive-foreground: #ffffff;
+    --positive-bg: #d1fae5;
+    --positive-border: #6ee7b7;
+
+    --negative: #ef4444;
+    --negative-foreground: #ffffff;
+    --negative-bg: #fee2e2;
+    --negative-border: #fca5a5;
+
+    --warning: #f59e0b;
+    --warning-foreground: #ffffff;
+    --warning-bg: #fef3c7;
+    --warning-border: #fcd34d;
+
+    --info: #3b82f6;
+    --info-foreground: #ffffff;
+    --info-bg: #dbeafe;
+    --info-border: #93c5fd;
+
+    // Background Colors
+    --background: #ffffff;
+    --background-subtle: #f9fafb;
+    --background-muted: #f3f4f6;
+    --background-overlay: rgba(0, 0, 0, 0.5);
+    --background-inverse: #111827;
+
+    // Foreground Colors
+    --foreground: #111827;
+    --foreground-muted: #6b7280;
+    --foreground-subtle: #9ca3af;
+    --foreground-inverse: #ffffff;
+
+    // Surface Colors (Cards, Panels)
+    --surface-1: #ffffff;
+    --surface-2: #f9fafb;
+    --surface-3: #f3f4f6;
+
+    // Border Colors
+    --border: #e5e7eb;
+    --border-subtle: #f3f4f6;
+    --border-strong: #d1d5db;
+    --border-hover: #9ca3af;
+    --border-focus: var(--primary);
+
+    // Form Colors
+    --input-bg: #ffffff;
+    --input-border: #d1d5db;
+    --input-border-hover: #9ca3af;
+    --input-border-focus: var(--primary);
+    --input-placeholder: #9ca3af;
+    --input-disabled-bg: #f3f4f6;
+    --input-disabled-text: #9ca3af;
+
+    // Shadow
+    --shadow: rgba(0, 0, 0, 0.1);
+    --shadow-sm: 0 1px 2px 0 var(--shadow);
+    --shadow-md: 0 4px 6px -1px var(--shadow);
+    --shadow-lg: 0 10px 15px -3px var(--shadow);
+    --shadow-xl: 0 20px 25px -5px var(--shadow);
+
+    // Legacy/Deprecated (for backward compatibility)
+    --card: var(--surface-1);
+    --card-foreground: var(--foreground);
+    --popover: var(--surface-1);
+    --popover-foreground: var(--foreground);
+    --muted: var(--background-muted);
+    --muted-foreground: var(--foreground-muted);
+    --destructive: var(--negative);
+    --ring: var(--border-focus);
+
+    // Charts
+    --chart-1: #ea580c;
+    --chart-2: #06b6d4;
+    --chart-3: #3b82f6;
+    --chart-4: #84cc16;
+    --chart-5: #eab308;
+}
+
+/* Tenant-specific themes loaded via tenant-theme.scss */
+
+/* Dark mode */
+.dark {
+    // Brand Colors (adjusted for dark mode)
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
+    --primary-hover: #2563eb;
+    --primary-active: #1d4ed8;
+
+    --secondary: #64748b;
+    --secondary-foreground: #ffffff;
+    --secondary-hover: #475569;
+    --secondary-active: #334155;
+
+    --tertiary: #a78bfa;
+    --tertiary-foreground: #ffffff;
+    --tertiary-hover: #8b5cf6;
+    --tertiary-active: #7c3aed;
+
+    --accent: #22d3ee;
+    --accent-foreground: #0c4a6e;
+    --accent-hover: #06b6d4;
+    --accent-active: #0891b2;
+
+    // Semantic Colors (adjusted for dark mode)
+    --positive: #34d399;
+    --positive-foreground: #ffffff;
+    --positive-bg: #064e3b;
+    --positive-border: #047857;
+
+    --negative: #f87171;
+    --negative-foreground: #ffffff;
+    --negative-bg: #7f1d1d;
+    --negative-border: #b91c1c;
+
+    --warning: #fbbf24;
+    --warning-foreground: #78350f;
+    --warning-bg: #78350f;
+    --warning-border: #b45309;
+
+    --info: #60a5fa;
+    --info-foreground: #ffffff;
+    --info-bg: #1e3a8a;
+    --info-border: #2563eb;
+
+    // Background Colors
+    --background: #0a0a0a;
+    --background-subtle: #171717;
+    --background-muted: #262626;
+    --background-overlay: rgba(0, 0, 0, 0.75);
+    --background-inverse: #ffffff;
+
+    // Foreground Colors
+    --foreground: #fafafa;
+    --foreground-muted: #a3a3a3;
+    --foreground-subtle: #737373;
+    --foreground-inverse: #0a0a0a;
+
+    // Surface Colors
+    --surface-1: #171717;
+    --surface-2: #262626;
+    --surface-3: #404040;
+
+    // Border Colors
+    --border: #404040;
+    --border-subtle: #262626;
+    --border-strong: #525252;
+    --border-hover: #737373;
+    --border-focus: var(--primary);
+
+    // Form Colors
+    --input-bg: #171717;
+    --input-border: #404040;
+    --input-border-hover: #525252;
+    --input-border-focus: var(--primary);
+    --input-placeholder: #737373;
+    --input-disabled-bg: #262626;
+    --input-disabled-text: #525252;
+
+    // Shadow
+    --shadow: rgba(0, 0, 0, 0.5);
+    --shadow-sm: 0 1px 2px 0 var(--shadow);
+    --shadow-md: 0 4px 6px -1px var(--shadow);
+    --shadow-lg: 0 10px 15px -3px var(--shadow);
+    --shadow-xl: 0 20px 25px -5px var(--shadow);
+
+    // Legacy/Deprecated
+    --card: var(--surface-1);
+    --card-foreground: var(--foreground);
+    --popover: var(--surface-1);
+    --popover-foreground: var(--foreground);
+    --muted: var(--background-muted);
+    --muted-foreground: var(--foreground-muted);
+    --destructive: var(--negative);
+    --ring: var(--border-focus);
+
+    // Charts
+    --chart-1: #a78bfa;
+    --chart-2: #34d399;
+    --chart-3: #fbbf24;
+    --chart-4: #f472b6;
+    --chart-5: #fb923c;
+}
+
+/* Base styles */
+html {
+    height: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    min-height: 100%;
+    background-color: var(--background);
+    color: var(--foreground);
+    line-height: 1.5;
+}
+
+/* Base UI component resets */
+button {
+    font-family: inherit;
+    font-size: 100%;
+    line-height: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+input,
+textarea,
+select {
+    font-family: inherit;
+    font-size: 100%;
+    line-height: inherit;
+    color: inherit;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+/* Utility classes */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

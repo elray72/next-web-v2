@@ -6,7 +6,11 @@
     "./tenants": {
       "types": "./tenants/index.ts",
       "default": "./tenants/index.ts"
-    }
+    },
+    "./tenants/mcd/*": "./tenants/mcd/*",
+    "./tenants/twd/*": "./tenants/twd/*",
+    "./tenants/dw/*": "./tenants/dw/*",
+    "./tenants/default/*": "./tenants/default/*"
   },
   "scripts": {
     "lint": "eslint .",

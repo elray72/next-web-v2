@@ -25,6 +25,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@web/shared/*": [
+        "../shared/*"
       ]
     }
   },
@@ -33,7 +36,11 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    ".next-mcd/types/**/*.ts",
+    ".next-mcd/dev/types/**/*.ts",
+    ".next-twd/types/**/*.ts",
+    ".next-twd/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -12,6 +12,10 @@
     "twd": "pnpm --filter @web/site twd",
     "dw": "pnpm --filter @web/site dw",
     "build": "pnpm --filter @web/site build",
+    "build:mcd": "TENANT=mcd pnpm --filter @web/site build",
+    "build:twd": "TENANT=twd pnpm --filter @web/site build",
+    "build:dw": "TENANT=dw pnpm --filter @web/site build",
+    "build:default": "pnpm --filter @web/site build",
     "cms:build": "dotnet build cms/DW.Cms.csproj",
     "cms:run": "dotnet run --project cms/DW.Cms.csproj"
   },

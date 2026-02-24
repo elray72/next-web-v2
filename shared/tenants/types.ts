@@ -1,9 +1,10 @@
-export type TenantName = 'mcd' | 'twd' | 'dw';
+export type TenantName = 'mcd' | 'twd' | 'dw' | 'default';
 
 export type TenantHost =
   | 'diet.mayoclinic.org'
   | 'www.totalwellbeingdiet.com'
-  | 'www.digitalwellness.com';
+  | 'www.digitalwellness.com'
+  | 'localhost';
 
 export type Zone = 'marketing' | 'member' | 'onboarding';
 
