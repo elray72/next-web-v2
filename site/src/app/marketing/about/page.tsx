@@ -1,5 +1,5 @@
-import { getCmsProvider } from '@/lib/dependencies';
-import type { ContentItem } from '@/lib/cms/types';
+import { getCmsProvider } from '@/common/dependencies';
+import type { ContentItem } from '@/models/cms';
 
 // Example properties for an "About" page content type
 interface AboutPageProperties {

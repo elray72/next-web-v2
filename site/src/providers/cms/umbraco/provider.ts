@@ -10,7 +10,7 @@ import type {
     ContentQueryParams,
     ContentCollectionParams,
     SearchParams,
-} from '@/lib/cms/types';
+} from '@/models/cms';
 import {
     getContentByPath as umbracoGetContentByPath,
     getContentById as umbracoGetContentById,

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { getTenantFromHeaders } from '@web/shared/tenants';
-import './globals.css';
+import './styles-loader';
 
 export const metadata: Metadata = {
   title: 'Digital Wellness',
@@ -14,11 +14,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const h = await headers();
-  const tenant = getTenantFromHeaders(h);
+
+  // In dev mode, use NEXT_PUBLIC_DEV_TENANT if set (from pnpm dev:mcd, dev:twd, etc.)
+  const devTenant = process.env.NEXT_PUBLIC_DEV_TENANT;
+  const tenant = devTenant || getTenantFromHeaders(h);
 
   return (
-    <html lang="en" data-tenant={tenant ?? 'default'}>
-      <body>{children}</body>
+    <html lang="en">
+      <body>
+        {children}
+      </body>
     </html>
   );
 }

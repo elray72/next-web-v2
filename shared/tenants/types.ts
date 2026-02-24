@@ -9,6 +9,8 @@ export type Zone = 'marketing' | 'member' | 'onboarding';
 
 /**
  * Theme configuration for a tenant
+ * @deprecated Styles are now in separate SCSS files per tenant (site/src/styles/tenants/)
+ * This interface is kept for backward compatibility but is no longer used.
  */
 export interface TenantTheme {
   /**
@@ -132,6 +134,7 @@ export interface TenantConfig {
   defaultZone: Zone;
   /**
    * Theme configuration
+   * @deprecated Styles now in site/src/styles/tenants/{tenant}/theme.scss
    */
   theme?: TenantTheme;
   /**

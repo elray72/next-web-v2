@@ -1,0 +1,40 @@
+/**
+ * The Wellness District Theme
+ * Brand: Wellness green
+ */
+
+:root {
+    // Brand Colors - Wellness Green
+    --primary: #00a65a;
+    --primary-foreground: #ffffff;
+    --primary-hover: #008549;
+    --primary-active: #006438;
+
+    --secondary: #6b9f78;
+    --secondary-foreground: #ffffff;
+    --secondary-hover: #558060;
+    --secondary-active: #406148;
+
+    --tertiary: #52b788;
+    --tertiary-foreground: #ffffff;
+    --tertiary-hover: #3f9670;
+    --tertiary-active: #2d7558;
+
+    --accent: #74c69d;
+    --accent-foreground: #ffffff;
+    --accent-hover: #5aa57e;
+    --accent-active: #40845f;
+
+    // Backgrounds
+    --background: #f5faf7;
+    --background-subtle: #edf5f0;
+    --background-muted: #e3f0e8;
+
+    // Surfaces
+    --surface-1: #ffffff;
+    --surface-2: #f5faf7;
+    --surface-3: #edf5f0;
+
+    // Border radius
+    --radius: 0.75rem;
+}

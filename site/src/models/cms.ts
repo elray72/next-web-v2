@@ -1,8 +1,8 @@
 /**
- * CMS Provider Interface
+ * CMS Models
  *
- * Abstraction layer for content management system operations.
- * Implementations: Umbraco, Contentful, Strapi, etc.
+ * Types and interfaces for CMS integration.
+ * These are DTOs that match the CMS API structure (Umbraco).
  */
 
 /**
@@ -85,7 +85,7 @@ export interface SearchParams {
 }
 
 /**
- * Generic content item structure
+ * Generic content item structure (DTO from CMS API)
  */
 export interface ContentItem<TProperties = Record<string, any>> {
     id: string;
@@ -115,7 +115,7 @@ export interface ContentCollection<T = ContentItem> {
 /**
  * CMS Provider Interface
  *
- * All CMS implementations must conform to this interface
+ * Contract that all CMS implementations must follow
  */
 export interface ICmsProvider {
     /**

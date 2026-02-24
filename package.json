@@ -8,6 +8,9 @@
   ],
   "scripts": {
     "dev": "pnpm --filter @web/site dev",
+    "mcd": "pnpm --filter @web/site mcd",
+    "twd": "pnpm --filter @web/site twd",
+    "dw": "pnpm --filter @web/site dw",
     "build": "pnpm --filter @web/site build",
     "cms:build": "dotnet build cms/DW.Cms.csproj",
     "cms:run": "dotnet run --project cms/DW.Cms.csproj"

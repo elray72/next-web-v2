@@ -8,15 +8,6 @@ export const TENANTS: TenantConfig[] = [
     host: 'diet.mayoclinic.org',
     zones: ['marketing', 'member', 'onboarding'],
     defaultZone: 'marketing',
-    theme: {
-      primary: 'oklch(0.45 0.2 220)', // Mayo blue
-      primaryForeground: 'oklch(0.985 0 0)',
-      secondary: 'oklch(0.7 0.15 180)',
-      secondaryForeground: 'oklch(0.145 0 0)',
-      accent: 'oklch(0.65 0.18 160)',
-      accentForeground: 'oklch(0.985 0 0)',
-      radius: '0.5rem',
-    },
     branding: {
       title: 'Mayo Clinic Diet',
       description: 'Science-based weight loss program',
@@ -33,15 +24,6 @@ export const TENANTS: TenantConfig[] = [
     host: 'www.totalwellbeingdiet.com',
     zones: ['marketing', 'member', 'onboarding'],
     defaultZone: 'marketing',
-    theme: {
-      primary: 'oklch(0.55 0.22 140)', // Green/wellness theme
-      primaryForeground: 'oklch(0.985 0 0)',
-      secondary: 'oklch(0.65 0.15 80)',
-      secondaryForeground: 'oklch(0.145 0 0)',
-      accent: 'oklch(0.7 0.2 100)',
-      accentForeground: 'oklch(0.985 0 0)',
-      radius: '0.75rem',
-    },
     branding: {
       title: 'Total Wellbeing Diet',
       description: 'Holistic approach to health and wellness',
@@ -58,15 +40,6 @@ export const TENANTS: TenantConfig[] = [
     host: 'www.digitalwellness.com',
     zones: ['marketing'],
     defaultZone: 'marketing',
-    theme: {
-      primary: 'oklch(0.5 0.25 280)', // Purple/tech theme
-      primaryForeground: 'oklch(0.985 0 0)',
-      secondary: 'oklch(0.6 0.2 320)',
-      secondaryForeground: 'oklch(0.985 0 0)',
-      accent: 'oklch(0.65 0.22 250)',
-      accentForeground: 'oklch(0.985 0 0)',
-      radius: '0.625rem',
-    },
     branding: {
       title: 'Digital Wellness',
       description: 'Technology-driven wellness solutions',

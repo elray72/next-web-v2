@@ -1,0 +1,40 @@
+/**
+ * Mayo Clinic Diet Theme
+ * Brand: Professional medical blue
+ */
+
+:root {
+    // Brand Colors - Mayo Clinic Blue
+    --primary: #0051a5;
+    --primary-foreground: #ffffff;
+    --primary-hover: #003d7a;
+    --primary-active: #002952;
+
+    --secondary: #5b7f95;
+    --secondary-foreground: #ffffff;
+    --secondary-hover: #4a6779;
+    --secondary-active: #3a515f;
+
+    --tertiary: #2c5f8d;
+    --tertiary-foreground: #ffffff;
+    --tertiary-hover: #234a6f;
+    --tertiary-active: #1a3652;
+
+    --accent: #50a5c8;
+    --accent-foreground: #ffffff;
+    --accent-hover: #3d8ab0;
+    --accent-active: #2d6f98;
+
+    // Backgrounds
+    --background: #f5f7fa;
+    --background-subtle: #edf1f5;
+    --background-muted: #e3e9f0;
+
+    // Surfaces
+    --surface-1: #ffffff;
+    --surface-2: #f5f7fa;
+    --surface-3: #edf1f5;
+
+    // Border radius
+    --radius: 0.5rem;
+}

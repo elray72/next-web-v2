@@ -4,7 +4,7 @@
  * Central registry for service bindings and dependency injection
  */
 
-import type { ICmsProvider } from '@/lib/cms/types';
+import type { ICmsProvider } from '@/models/cms';
 import { umbracoProvider } from '@/providers/cms/umbraco/provider';
 
 /**
