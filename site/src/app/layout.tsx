@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
+import { getTenantFromHeaders } from '@web/shared/tenants';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -6,13 +8,16 @@ export const metadata: Metadata = {
   description: 'Multi-tenant wellness platform',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const h = await headers();
+  const tenant = getTenantFromHeaders(h);
+
   return (
-    <html lang="en">
+    <html lang="en" data-tenant={tenant ?? 'default'}>
       <body>{children}</body>
     </html>
   );

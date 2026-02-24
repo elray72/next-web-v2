@@ -45,6 +45,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Base theme (default) */
 :root {
   --radius: 0.625rem;
   --card: oklch(1 0 0);
@@ -80,6 +81,38 @@
   --foreground: oklch(0.145 0 0);
 }
 
+/* Tenant-specific themes */
+html[data-tenant='mcd'] {
+  --primary: oklch(0.45 0.2 220);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.7 0.15 180);
+  --secondary-foreground: oklch(0.145 0 0);
+  --accent: oklch(0.65 0.18 160);
+  --accent-foreground: oklch(0.985 0 0);
+  --radius: 0.5rem;
+}
+
+html[data-tenant='twd'] {
+  --primary: oklch(0.55 0.22 140);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.65 0.15 80);
+  --secondary-foreground: oklch(0.145 0 0);
+  --accent: oklch(0.7 0.2 100);
+  --accent-foreground: oklch(0.985 0 0);
+  --radius: 0.75rem;
+}
+
+html[data-tenant='dw'] {
+  --primary: oklch(0.5 0.25 280);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.6 0.2 320);
+  --secondary-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.65 0.22 250);
+  --accent-foreground: oklch(0.985 0 0);
+  --radius: 0.625rem;
+}
+
+/* Dark mode */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
